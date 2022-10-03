@@ -479,9 +479,9 @@
     (let [data (clojure.core/merge {:spec form} (extra-spec-map this))]
       `(spec-tools.core/spec ~data)))
 
-  IFn
-  #?(:clj  (invoke [this x] (if (ifn? spec) (spec x) (fail-on-invoke this)))
-     :cljs (-invoke [this x] (if (ifn? spec) (spec x) (fail-on-invoke this)))))
+  #?@(:bb []
+      :clj [IFn (invoke [this x] (if (ifn? spec) (spec x) (fail-on-invoke this)))]
+      :cljs [IFn (-invoke [this x] (if (ifn? spec) (spec x) (fail-on-invoke this)))]))
 
 #?(:clj
    (defmethod print-method Spec
